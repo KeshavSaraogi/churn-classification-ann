@@ -1,27 +1,17 @@
-import json
 import tensorflow as tf
-from tensorflow.keras.models import model_from_json
+import pickle
 
-try:
-    print("🔄 Loading model architecture from JSON...")
+# Load the model
+model = tf.keras.models.load_model("model_fixed.keras", compile=False)
 
-    # Load model architecture from JSON
-    with open("model.json", "r") as json_file:
-        model_json = json_file.read()
-    
-    model = model_from_json(model_json)
+# Load the encoders and scaler
+with open("genderEncoder.pkl", "rb") as file:
+    label_encoder_gender = pickle.load(file)
 
-    print("✅ Model architecture loaded successfully!")
+with open("geoOHE.pkl", "rb") as file:
+    onehot_encoder_geo = pickle.load(file)
 
-    # Load model weights
-    print("🔄 Loading model weights from 'model_weights.h5'...")
-    model.load_weights("model_weights.h5")
+with open("scaler.pkl", "rb") as file:
+    scaler = pickle.load(file)
 
-    print("✅ Model weights loaded successfully!")
-
-    # Save the new model in TensorFlow format
-    model.save("model_rebuilt.keras", save_format="tf")
-    print("✅ Model successfully resaved as 'model_rebuilt.keras'")
-
-except Exception as e:
-    print(f"❌ Error rebuilding model: {e}")
+print("✅ Model and preprocessing tools loaded successfully!")
