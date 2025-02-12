@@ -6,8 +6,12 @@ import pandas as pd
 import pickle
 
 # Load the trained model
-model = tf.keras.models.load_model("model_fixed.keras", compile=False)
+with open("model.json", "r") as json_file:
+    model_json = json_file.read()
+model = tf.keras.models.model_from_json(model_json)
 
+# Load the weights
+model.load_weights("model_weights.h5", by_name=True, skip_mismatch=True)
 # Load the encoders and scaler
 with open("genderEncoder.pkl", "rb") as file:
     label_encoder_gender = pickle.load(file)
